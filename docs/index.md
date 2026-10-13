@@ -6,18 +6,40 @@ implementation.
 
 ## Start here
 
-1. Read [threading and event handoffs](guides/threading-and-event-handoffs.md)
+1. Read the [VS2 and VS Core API reference](vs2-api/README.md) — a standalone,
+   version-scoped reference for everything Valkyrien Skies 2 and VS Core expose
+   to addons. It is independent of this repository's implementation.
+2. Read [threading and event handoffs](guides/threading-and-event-handoffs.md)
    before changing collision handling.
-2. Consult the [VS2 and VS Core API reference](reference/vs2-core-api.md) for
-   versioned API contracts, ownership, events, transforms, and attachments.
 3. Follow the architecture pages for the current collision-to-block-mutation
    implementation.
 
-## Reference
+## VS2 and VS Core API reference
+
+The canonical VS2/VS Core reference lives in [`vs2-api/`](vs2-api/README.md).
+It covers architecture and thread ownership, the Core and Mod API facades,
+ship/body/transform/force APIs, events, attachments and serializers, physics and
+collision, worlds/connectivity/augmentations, Minecraft integration, internal
+APIs, a full API inventory with provenance, advanced facilities, and practical
+Java/Kotlin examples.
 
 | Page | Purpose |
 | --- | --- |
-| [VS2 and VS Core API reference](reference/vs2-core-api.md) | Verified dependency reference for VS2 2.4.11 and VS Core 1.1.0+cf208d8b56. |
+| [VS2 and VS Core API reference](vs2-api/README.md) | Entry point and version scope. |
+| [Architecture and thread ownership](vs2-api/01-architecture-and-threading.md) | Threads, ticks, and safe handoff. |
+| [Core API and lifecycle](vs2-api/02-core-api-and-lifecycle.md) | Facades, initialization, ship lifecycle. |
+| [Ships, bodies, transforms, and forces](vs2-api/03-ships-bodies-and-transforms.md) | Ship types, spaces, force/torque APIs. |
+| [Events and callbacks](vs2-api/04-events-and-callbacks.md) | Every event and its thread. |
+| [Attachments and serialization](vs2-api/05-attachments-and-serialization.md) | Addon state and serializers. |
+| [Physics, shapes, contacts, and joints](vs2-api/06-physics-and-collision-api.md) | PhysLevel, contacts, ray casts, joints. |
+| [Worlds, connectivity, and augmentations](vs2-api/07-worlds-connectivity-and-augmentations.md) | Ship worlds, connectivity, augmentations. |
+| [Minecraft integration](vs2-api/08-minecraft-integration.md) | Mod API, VSGameUtils, config, datagen. |
+| [Internal APIs and compatibility](vs2-api/09-internal-apis-and-compatibility.md) | Internal types and migration. |
+| [API inventory and provenance](vs2-api/10-api-inventory.md) | Full inventory and how it was verified. |
+| [Advanced integration facilities](vs2-api/11-advanced-integration-facilities.md) | Wings, drag, networking, assembly. |
+| [Practical examples](vs2-api/12-examples.md) | Java/Kotlin examples. |
+| [Additional API surface](vs2-api/13-additional-api-surface.md) | Utilities, impl, native Krunch, and other public types not covered above. |
+| [Tooling and publishing](vs2-api/14-tooling-and-publishing.md) | Docs structure, Dokka build, GitHub Pages. |
 
 ## Guides
 
@@ -39,8 +61,8 @@ implementation.
 
 ## Conventions
 
-The reference page documents what resolved VS2/Core artifacts expose. Architecture
-pages document this project and may discuss implementation choices or open work.
-Examples should state their thread, coordinate space, and whether an API is
-public or internal. Links use ordinary relative Markdown so they work on GitHub,
-common repository browsers, and local editors.
+The `vs2-api/` reference documents what resolved VS2/Core artifacts expose.
+Architecture pages document this project and may discuss implementation choices
+or open work. Examples should state their thread, coordinate space, and whether
+an API is public or internal. Links use ordinary relative Markdown so they work
+on GitHub, common repository browsers, and local editors.

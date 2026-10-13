@@ -1,0 +1,82 @@
+# MkDocs configuration for the VS Collisions documentation.
+#
+# Run from the docs/ directory:
+#     pip install mkdocs-material
+#     mkdocs serve
+#     mkdocs build
+#
+# The VS2/VS Core reference is a standalone tree. Its generated Dokka API site
+# is not committed (see docs/vs2-api/14-tooling-and-publishing.md); build it with
+#     ./gradlew dokkaGeneratePublicationHtml
+
+site_name: VS Collisions documentation
+site_description: VS Collisions internals plus a standalone VS2 / VS Core API reference.
+docs_dir: .
+site_dir: ../site
+use_directory_urls: true
+
+theme:
+  name: material
+  features:
+    - navigation.sections
+    - navigation.top
+    - content.code.copy
+    - search.highlight
+    - search.suggest
+  palette:
+    - media: "(prefers-color-scheme: light)"
+      scheme: default
+      toggle:
+        icon: material/weather-night
+        name: Switch to dark mode
+    - media: "(prefers-color-scheme: dark)"
+      scheme: slate
+      toggle:
+        icon: material/weather-sunny
+        name: Switch to light mode
+
+markdown_extensions:
+  - admonition
+  - attr_list
+  - def_list
+  - footnotes
+  - tables
+  - toc:
+      permalink: true
+  - pymdownx.details
+  - pymdownx.superfences
+  - pymdownx.highlight
+  - pymdownx.tabbed:
+      alternate_style: true
+
+plugins:
+  - search
+
+nav:
+  - Home: index.md
+  - VS2 / VS Core API:
+      - Overview: vs2-api/README.md
+      - 01 Architecture and threading: vs2-api/01-architecture-and-threading.md
+      - 02 Core API and lifecycle: vs2-api/02-core-api-and-lifecycle.md
+      - 03 Ships, bodies, transforms, forces: vs2-api/03-ships-bodies-and-transforms.md
+      - 04 Events and callbacks: vs2-api/04-events-and-callbacks.md
+      - 05 Attachments and serialization: vs2-api/05-attachments-and-serialization.md
+      - 06 Physics, shapes, contacts, joints: vs2-api/06-physics-and-collision-api.md
+      - 07 Worlds, connectivity, augmentations: vs2-api/07-worlds-connectivity-and-augmentations.md
+      - 08 Minecraft integration: vs2-api/08-minecraft-integration.md
+      - 09 Internal APIs and compatibility: vs2-api/09-internal-apis-and-compatibility.md
+      - 10 API inventory and provenance: vs2-api/10-api-inventory.md
+      - 11 Advanced integration facilities: vs2-api/11-advanced-integration-facilities.md
+      - 12 Practical examples: vs2-api/12-examples.md
+      - 13 Additional API surface: vs2-api/13-additional-api-surface.md
+      - 14 Tooling and publishing: vs2-api/14-tooling-and-publishing.md
+  - Guides:
+      - Threading and event handoffs: guides/threading-and-event-handoffs.md
+      - Development workflow: guides/development-workflow.md
+  - Architecture:
+      - Collision data flow: architecture/collision-data-flow.md
+      - Coordinate transforms: architecture/coordinate-spaces.md
+      - Ship attachments and persistence: architecture/ship-attachments-and-persistence.md
+      - Ship lifecycle and fracturing: architecture/ship-lifecycle-and-fracturing.md
+      - Block mutation and destruction: architecture/block-mutation-and-destruction.md
+      - Stress and material pipeline: architecture/stress-and-material-pipeline.md

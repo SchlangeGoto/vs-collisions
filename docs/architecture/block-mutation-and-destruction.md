@@ -130,7 +130,6 @@ catastrophic hit that must remove a region atomically:
 
 ```kotlin
 import org.valkyrienskies.mod.common.util.SplittingDisablerAttachment
-import org.valkyrienskies.core.api.attachment.setAttachment
 
 fun breachHull(ship: LoadedServerShip, level: ServerLevel, blastRegion: List<BlockPos>) {
     val gate = SplittingDisablerAttachment(true).also { it.disableSplitting() }

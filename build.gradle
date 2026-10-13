@@ -20,6 +20,8 @@ plugins {
     id 'com.matthewprenger.cursegradle' version '1.4.0'
     id "com.modrinth.minotaur" version "2.4.5"
     id "com.github.johnrengelman.shadow" version "7.1.2"
+
+    id("org.jetbrains.dokka") version "2.2.0"
 }
 
 java {
@@ -199,3 +201,71 @@ tasks.withType(JavaCompile).configureEach {
     // Minecraft 1.18 (1.18-pre2) upwards uses Java 17.
     it.options.release = 17
 }
+
+// region VS2 / VS Core API documentation (Dokka)
+//
+// Generate a real Dokka site for the Valkyrien Skies 2 and VS Core *sources*
+// resolved by this build, reusing the project's full Minecraft/Forge/JOML
+// classpath. The mod's own sources are suppressed so the output is a standalone
+// VS2/VS Core reference.
+//
+//   ./gradlew dokkaGeneratePublicationHtml
+//   -> docs/vs2-api/api/index.html
+
+configurations {
+    vsApiSources {
+        canBeConsumed = false
+        canBeResolved = true
+    }
+}
+
+dependencies {
+    vsApiSources "org.valkyrienskies.core:api:${vs_core_version}:sources"
+    vsApiSources "org.valkyrienskies.core:internal:${vs_core_version}:sources"
+    vsApiSources "org.valkyrienskies:valkyrienskies-120-forge:${vs2_version}:sources"
+}
+
+tasks.register('extractVsApiSources', Sync) {
+    from({ configurations.vsApiSources.collect { zipTree(it) } })
+    include 'org/valkyrienskies/**'
+    into layout.buildDirectory.dir('vs-api-sources')
+    duplicatesStrategy = DuplicatesStrategy.EXCLUDE
+}
+
+dokka {
+    moduleName.set('vs2-core-api')
+    moduleVersion.set("${vs2_version} / ${vs_core_version}")
+    modulePath.set('vs2-core-api')
+    dokkaSourceSets.configureEach {
+        sourceRoots.from(tasks.named('extractVsApiSources'))
+        // Only document VS2 / VS Core; hide this repository's own code.
+        perPackageOption {
+            matchingRegex.set('dev\\.kkazi.*')
+            suppress.set(true)
+        }
+        // Hide implementation noise (mixins, duck interfaces, compat shims,
+        // client renderers). The public and internal API remain documented.
+        ['mod\\.mixin', 'mod\\.mixinducks', 'mod\\.compat', 'mod\\.client',
+         'mod\\.event', 'mod\\.forge\\.mixin', 'mod\\.forge\\.compat',
+         'mod\\.platform', 'mod\\.util'].each { sub ->
+            perPackageOption {
+                matchingRegex.set("org\\.valkyrienskies\\.${sub}.*")
+                suppress.set(true)
+            }
+        }
+        perPackageOption {
+            matchingRegex.set('org\\.valkyrienskies.*')
+        }
+        reportUndocumented.set(false)
+        skipDeprecated.set(false)
+        skipEmptyPackages.set(true)
+    }
+    dokkaPublications.configureEach {
+        failOnWarning.set(false)
+        suppressObviousFunctions.set(true)
+    }
+    dokkaPublications.named('html') {
+        outputDirectory.set(layout.projectDirectory.dir('docs/vs2-api/api'))
+    }
+}
+// endregion
